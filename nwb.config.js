@@ -24,7 +24,7 @@ function getEnvironment() {
 module.exports = {
     type: 'react-app',
     babel: {
-        cherryPick: ['semantic-ui-react', 'kubernetes-client', 'octokat']
+        cherryPick: ['semantic-ui-react']
     },
     webpack: {
         uglify: false,
