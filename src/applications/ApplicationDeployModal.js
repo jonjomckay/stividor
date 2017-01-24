@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Header, Icon, Input, Modal, Table } from 'semantic-ui-react';
+import { Button, Form, Header, Icon, Input, Modal, Popup, Table } from 'semantic-ui-react';
 import deepMerge from 'deepmerge';
 import Kubernetes from '../Kubernetes';
 import Loadable from '../Loadable';
@@ -32,7 +32,7 @@ export default class ApplicationDeployModal extends Component {
         });
     };
 
-    onOpen = () => {
+    onMount = () => {
         this.setState({ existingContainers: [] });
 
         Kubernetes.fetchDeploymentByNamespace(this.props.namespace, this.props.application, (err, response) => {
@@ -135,7 +135,16 @@ export default class ApplicationDeployModal extends Component {
             positiveButtonDisabled = false;
         }
 
-        const trigger = <Button content="Deploy" color="green" icon="upload" labelPosition="left" disabled={ positiveButtonDisabled }  onClick={ this.onToggle } />;
+        const button = <Button content="Deploy" color="green" icon="upload" labelPosition="left" disabled={ positiveButtonDisabled } onClick={ this.onToggle } />;
+
+        const trigger = (
+            <Popup trigger={ button }>
+                <Popup.Header>Deploy</Popup.Header>
+                <Popup.Content>
+                    Deploy the application to the selected namespace, with any given changes to the container images
+                </Popup.Content>
+            </Popup>
+        );
 
         let existingContainers;
         if (this.state.existingContainers.length) {
@@ -171,7 +180,7 @@ export default class ApplicationDeployModal extends Component {
         }
 
         return (
-            <Modal trigger={ trigger } open={ this.state.open } onOpen={ this.onOpen }>
+            <Modal trigger={ trigger } open={ this.state.open } onMount={ this.onMount }>
                 <Modal.Header>Update application</Modal.Header>
 
                 <Modal.Content>

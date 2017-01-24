@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Header, Icon, Modal, Table } from 'semantic-ui-react';
+import { Button, Header, Icon, Modal, Popup, Table } from 'semantic-ui-react';
 import Kubernetes from '../Kubernetes';
 import Loadable from '../Loadable';
 
@@ -29,7 +29,7 @@ export default class ApplicationRedeployModal extends Component {
         });
     };
 
-    onOpen = () => {
+    onMount = () => {
         this.setState({ existingContainers: [] });
 
         Kubernetes.fetchDeploymentByNamespace(this.props.namespace, this.props.application, (err, response) => {
@@ -97,7 +97,17 @@ export default class ApplicationRedeployModal extends Component {
             positiveButtonDisabled = false;
         }
 
-        const trigger = <Button content="Redeploy" color="yellow" icon="refresh" labelPosition="left" disabled={ positiveButtonDisabled }  onClick={ this.onToggle } />;
+        const button = <Button content="Redeploy" color="yellow" icon="refresh" labelPosition="left" disabled={ positiveButtonDisabled } onClick={ this.onToggle } />;
+
+        const trigger = (
+            <Popup trigger={ button }>
+                <Popup.Header>Redeploy</Popup.Header>
+                <Popup.Content>
+                    Handy for updating an application with a container where the the same image name is reused (e.g. a
+                    branch-based naming strategy)
+                </Popup.Content>
+            </Popup>
+        );
 
         // TODO: Remove the check for existing containers when we pre-check before loading this component
         let existingContainers;
@@ -124,7 +134,7 @@ export default class ApplicationRedeployModal extends Component {
         }
 
         return (
-            <Modal trigger={ trigger } open={ this.state.open } onOpen={ this.onOpen }>
+            <Modal trigger={ trigger } open={ this.state.open } onMount={ this.onMount }>
                 <Modal.Header>Redeploy application</Modal.Header>
 
                 <Modal.Content>
