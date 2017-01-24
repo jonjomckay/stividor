@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { Grid, Header, Icon, Item, Label } from 'semantic-ui-react';
 import ContainerItem from './ContainerItem';
 import Loadable from '../Loadable';
-import NamespaceChooser from '../NamespaceChooser';
-import ApplicationDeployModal from './ApplicationDeployModal';
 import TemplateService from "../deployments/TemplateService";
+import ApplicationTitle from './ApplicationTitle';
 
 export default class ApplicationShow extends Component {
     constructor(props) {
@@ -65,21 +64,9 @@ export default class ApplicationShow extends Component {
 
         return (
             <Loadable loading={ this.state.loading }>
-                <Grid verticalAlign="middle">
-                    <Grid.Row>
-                        <Grid.Column width={ 8 }>
-                            <Header as="h1">{ this.state.deploymentTemplate.metadata.name }</Header>
-                        </Grid.Column>
+                <ApplicationTitle application={ this.state.deploymentTemplate.metadata.name } />
 
-                        <Grid.Column width={ 6 }>
-                            <NamespaceChooser onChange={ this.onNamespaceChange } />
-                        </Grid.Column>
-
-                        <Grid.Column width={ 2 }>
-                            <ApplicationDeployModal application={ this.props.application } namespace={ this.state.namespace } />
-                        </Grid.Column>
-                    </Grid.Row>
-
+                <Grid>
                     <Grid.Row>
                         <Grid.Column>
                             <Label image color="blue">

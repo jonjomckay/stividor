@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-component';
 import { Grid, Header, Icon } from 'semantic-ui-react';
 import ApplicationDeployModal from './ApplicationDeployModal';
 import ApplicationRedeployModal from './ApplicationRedeployModal';
 import NamespaceChooser from '../NamespaceChooser';
 
-class ApplicationListItem extends Component {
+class ApplicationTitle extends Component {
     constructor(props) {
         super(props);
 
@@ -64,9 +63,9 @@ class ApplicationListItem extends Component {
     }
 }
 
-ApplicationListItem.propTypes = {
+ApplicationTitle.propTypes = {
     application: React.PropTypes.string.isRequired,
     namespaces: React.PropTypes.arrayOf(React.PropTypes.string)
 };
 
-export default ApplicationListItem;
+export default ApplicationTitle;

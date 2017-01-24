@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-component';
-import { Grid, Header, List } from 'semantic-ui-react';
 import Loadable from '../Loadable';
 import Github from "../Github";
-import ApplicationListItem from './ApplicationListItem';
+import ApplicationTitle from './ApplicationTitle';
 import Kubernetes from "../Kubernetes";
 
 export default class ApplicationList extends Component {
@@ -52,7 +51,7 @@ export default class ApplicationList extends Component {
         const applications = this.state.applications.map(application => {
             return (
                 <div key={ application }>
-                    <ApplicationListItem application={ application } namespaces={ this.state.namespaces } />
+                    <ApplicationTitle application={ application } namespaces={ this.state.namespaces } />
                 </div>
             );
         });
