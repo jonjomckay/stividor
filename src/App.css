@@ -1,0 +1,7 @@
+.sub.header a {
+    color: inherit;
+}
+
+.sub.header a .icon:only-child {
+    margin-right: 0.25rem;
+}

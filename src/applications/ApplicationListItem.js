@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-component';
-import { Grid, Header } from 'semantic-ui-react';
+import { Grid, Header, Icon } from 'semantic-ui-react';
 import ApplicationDeployModal from './ApplicationDeployModal';
 import ApplicationRedeployModal from './ApplicationRedeployModal';
 import NamespaceChooser from '../NamespaceChooser';
@@ -30,12 +30,20 @@ class ApplicationListItem extends Component {
     render() {
         const application = this.props.application;
 
+        const githubLink = "https://github.com/" + process.env.REACT_APP_GITHUB_TEMPLATE_REPO_USERNAME + "/" + process.env.REACT_APP_GITHUB_TEMPLATE_REPO_NAME + "/blob/master/" + application;
+
         return (
             <Grid verticalAlign="middle">
                 <Grid.Row>
                     <Grid.Column width={ 6 }>
-                        <Header as="h2">
-                            <Link href={ "/" + application }>{ application }</Link>
+                        <Header as="h3">
+                            { application }
+                            <Header.Subheader>
+                                <a href={ githubLink }>
+                                    <Icon name='github' size="small" />
+                                    { process.env.REACT_APP_GITHUB_TEMPLATE_REPO_NAME }/{ application }
+                                </a>
+                            </Header.Subheader>
                         </Header>
                     </Grid.Column>
 

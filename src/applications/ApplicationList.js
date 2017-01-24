@@ -18,15 +18,27 @@ export default class ApplicationList extends Component {
     }
 
     componentDidMount = () => {
-        Github.fetchTemplateContents('').then(response => {
-            const applications = response.items
-                .filter(item => item.type === 'dir')
-                .map(item => item.name);
 
-            this.setState({
-                applications: applications,
-                loading: false
-            })
+        // Load the git ref for the master branch, so we can get the repository tree
+        Github.fetchTemplateRepositoryGitReference('master').then(reference => {
+
+            Github.fetchTemplatesTree(reference.object.sha).then(tree => {
+
+                const ending = '/deployment.yml';
+
+                // The list of applications is made of all directories with a "deployment.yml" folder in (depth of 1)
+                const applications = tree.tree
+                    .filter(item => item.path.endsWith(ending))
+                    .filter(item => item.path.match('^[^/]+/[^/]+$'))
+                    .map(item => item.path.replace(ending, ''));
+
+                this.setState({
+                    applications: applications,
+                    loading: false
+                });
+
+            });
+
         });
 
         Kubernetes.fetchNamespaces((err, response) => {
@@ -39,19 +51,19 @@ export default class ApplicationList extends Component {
     render() {
         const applications = this.state.applications.map(application => {
             return (
-                <List.Item key={ application }>
-                    <List.Content>
-                        <ApplicationListItem application={ application } namespaces={ this.state.namespaces } />
-                    </List.Content>
-                </List.Item>
+                <div key={ application }>
+                    <ApplicationListItem application={ application } namespaces={ this.state.namespaces } />
+                </div>
             );
         });
 
         return (
             <Loadable loading={ this.state.loading }>
-                <List relaxed animated>
+                <h1>Applications</h1>
+
+                <div>
                     { applications }
-                </List>
+                </div>
             </Loadable>
         );
     }
