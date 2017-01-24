@@ -15,4 +15,5 @@
 
 .sub.header a .icon:only-child {
     margin-right: 0.25rem;
+    vertical-align: middle;
 }
