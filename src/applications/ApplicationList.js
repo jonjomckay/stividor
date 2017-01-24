@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-component';
-import { List } from 'semantic-ui-react';
+import { Grid, Header, List } from 'semantic-ui-react';
 import Loadable from '../Loadable';
 import Github from "../Github";
+import ApplicationListItem from './ApplicationListItem';
+import Kubernetes from "../Kubernetes";
 
 export default class ApplicationList extends Component {
     constructor(props) {
@@ -10,35 +12,36 @@ export default class ApplicationList extends Component {
 
         this.state = {
             applications: [],
-
+            namespaces: [],
             loading: true
         };
     }
 
     componentDidMount = () => {
-        Github.fetchContents('').then(response => {
+        Github.fetchTemplateContents('').then(response => {
             const applications = response.items
                 .filter(item => item.type === 'dir')
-                .map(item => {
-                    return {
-                        name: item.name
-                    }
-                });
+                .map(item => item.name);
 
             this.setState({
                 applications: applications,
                 loading: false
             })
         });
+
+        Kubernetes.fetchNamespaces((err, response) => {
+            this.setState({
+                namespaces: response.items.map(item => item.metadata.name)
+            })
+        });
     };
 
     render() {
-        var applications = this.state.applications.map(application => {
+        const applications = this.state.applications.map(application => {
             return (
-                <List.Item key={ application.name }>
+                <List.Item key={ application }>
                     <List.Content>
-                        <List.Header><Link href={ "/" + application.name }>{ application.name }</Link></List.Header>
-                        <List.Description></List.Description>
+                        <ApplicationListItem application={ application } namespaces={ this.state.namespaces } />
                     </List.Content>
                 </List.Item>
             );
@@ -46,7 +49,7 @@ export default class ApplicationList extends Component {
 
         return (
             <Loadable loading={ this.state.loading }>
-                <List relaxed>
+                <List relaxed animated>
                     { applications }
                 </List>
             </Loadable>

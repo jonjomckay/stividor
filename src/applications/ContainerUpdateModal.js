@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
-import { Button, Form, Header, Modal, Table } from 'semantic-ui-react';
+import { Button, Form, Header, Icon, Modal, Table } from 'semantic-ui-react';
+import deepMerge from 'deepmerge';
 import Kubernetes from '../Kubernetes';
 import Loadable from '../Loadable';
+import DeploymentService from "../deployments/DeploymentService";
+import TemplateService from "../deployments/TemplateService";
 
 export default class ContainerUpdateModal extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            applyingUpdate: false,
             errorNamespace: false,
             existingContainers: [],
             loadingContainers: true,
             namespaces: [],
-            open: false
+            open: false,
+            updateMessage: 'Update'
         };
     }
 
@@ -47,7 +52,7 @@ export default class ContainerUpdateModal extends Component {
 
             this.setState({
                 existingContainers: containers,
-                loadingContainers: false
+                isLoading: false
             })
         });
     };
@@ -55,44 +60,65 @@ export default class ContainerUpdateModal extends Component {
     onSubmit = (e, { formData }) => {
         e.preventDefault();
 
+        const container = this.props.container;
+
+        // Reset the form validation
         this.setState({ errorNamespace: false });
 
+        // Do some form validation
         if (formData.namespace === '') {
             this.setState({ errorNamespace: true });
             return;
         }
 
-        // Try and load the deployment from the namespace if it exists (TODO: I think there's a more precise API endpoint for this)
-        Kubernetes.fetchDeploymentsByNamespace(formData.namespace, (err, response) => {
-            var deployment = (response.items || []).find(i => i.metadata.name === this.props.container.deployment);
-            if (deployment) {
-                // If it does then patch the deployment in the namespace with the new container
+        this.updateStatusMessage('Fetching deployments from Kubernetes');
 
-                const patch = {
+        // TODO: Check if the deployment exists already in the namespace in Kubernetes
+        // TODO: If it doesn't then create it from the template in GitHub
+
+        // Update the deployment from the template in GitHub
+        TemplateService.fetchDeploymentTemplate(container.deployment)
+            .then((res) => this.updateDeploymentFromTemplate(container, formData.image, formData.namespace, res));
+
+        // TODO: Somehow commit the new deployment to GitHub
+
+    };
+
+    updateDeploymentFromTemplate = (container, image, namespace, content) => {
+        const patch = {
+            metadata: {
+                namespace: namespace
+            },
+            spec: {
+                template: {
                     spec: {
-                        template: {
-                            spec: {
-                                containers: [
-                                    {
-                                        name: this.props.container.name,
-                                        image: formData.image
-                                    }
-                                ]
+                        containers: [
+                            {
+                                name: container.name,
+                                image: image
                             }
-                        }
+                        ]
                     }
-                };
-
-                Kubernetes.patchDeployment(formData.namespace, this.props.container.deployment, patch, (err, response) => {
-                    console.log(err);
-                    console.log(response);
-                })
-            } else {
-                // If it doesn't then create it from the template in Github
+                }
             }
-        });
+        };
 
-        // Somehow commit the new deployment to Github
+        var deploymentContent = deepMerge(content, patch);
+
+        this.updateStatusMessage('Patching deployment in Kubernetes');
+
+        // If it does then patch the deployment in the namespace with the new container
+        Kubernetes.patchDeployment(namespace, container.deployment, patch, () => {
+            this.updateStatusMessage('Updating deployment in Github');
+
+            // Save the deployment into the Github deployments repository
+            DeploymentService.updateGithubDeployment(container.deployment, namespace, deploymentContent).then(() => {
+                this.setState({ isDeploying: false, updateMessage: 'Done!' });
+
+                // Close the modal after a second
+                setTimeout(this.onToggle, 1000);
+            });
+        });
     };
 
     onToggle = () => {
@@ -101,10 +127,14 @@ export default class ContainerUpdateModal extends Component {
         });
     };
 
+    updateStatusMessage = (message) => {
+        this.setState({ isDeploying: true, updateMessage: message });
+    };
+
     render() {
         const container = this.props.container;
 
-        const trigger = <a onClick={ this.onToggle }>{ container.name }</a>;
+        const trigger = <Button onClick={ this.onToggle } size="tiny" color="yellow">Update</Button>;
 
         const containers = this.state.existingContainers.map(container => {
             return (
@@ -124,6 +154,11 @@ export default class ContainerUpdateModal extends Component {
 
         const formName = "container-update-" + container.name;
 
+        let positiveButtonIcon = 'checkmark';
+        if (this.state.isDeploying) {
+            positiveButtonIcon = 'refresh';
+        }
+
         return (
             <Modal trigger={ trigger } open={ this.state.open } onOpen={ this.onOpen }>
                 <Modal.Header>Update container</Modal.Header>
@@ -134,7 +169,7 @@ export default class ContainerUpdateModal extends Component {
                     <Header>Existing Containers</Header>
 
                     <div>
-                    <Loadable loading={ this.state.loadingContainers }>
+                    <Loadable loading={ this.state.isLoading }>
                         <Table columns={ 2 } fixed>
                             <Table.Header>
                                 <Table.Row>
@@ -164,7 +199,9 @@ export default class ContainerUpdateModal extends Component {
 
                 <Modal.Actions>
                     <Button negative icon="remove" labelPosition="right" content="Cancel" onClick={ this.onToggle }/>
-                    <Button positive icon="checkmark" labelPosition="right" content="Update" form={ formName}  type="submit" />
+                    <Button positive icon labelPosition="right" form={ formName} type="submit">
+                        <Icon loading={ this.state.isDeploying } name={ positiveButtonIcon } /> { this.state.updateMessage }
+                    </Button>
                 </Modal.Actions>
             </Modal>
         );

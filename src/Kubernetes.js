@@ -24,13 +24,20 @@ export default class Kubernetes {
             .get({ qs: { fieldSelector: 'metadata.name=' + name }}, callback);
     }
 
-    static fetchDeploymentsByNamespace(namespace, callback) {
-        return Kubernetes.createExtensions().namespace(namespace).deployments.get(callback);
+    static fetchDeploymentByNamespace(namespace, name, callback) {
+        return Kubernetes.createExtensions().namespace(namespace).deployment(name).get(callback);
+    }
+
+    static fetchNamespaces(callback) {
+        return Kubernetes.create().namespaces.get(callback);
     }
 
     static patchDeployment(namespace, name, patch, callback) {
         return Kubernetes.createExtensions().namespace(namespace).deployment(name).patch({
-            body: patch
+            body: patch,
+            qs: {
+                pretty: true
+            }
         }, callback);
     }
 }

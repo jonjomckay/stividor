@@ -3,6 +3,7 @@ import Router, { Link } from 'react-router-component';
 import { Container, Menu } from 'semantic-ui-react';
 import ApplicationList from "./applications/ApplicationList";
 import ApplicationShow from "./applications/ApplicationShow";
+import './App.css';
 
 class App extends Component {
     render() {

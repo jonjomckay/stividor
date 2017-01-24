@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Grid, List } from 'semantic-ui-react';
-import yaml from 'js-yaml';
+import { Grid, Header, Icon, Item, Label } from 'semantic-ui-react';
 import ContainerItem from './ContainerItem';
-import Github from "../Github";
 import Loadable from '../Loadable';
+import NamespaceChooser from '../NamespaceChooser';
+import ApplicationDeployModal from './ApplicationDeployModal';
+import TemplateService from "../deployments/TemplateService";
 
 export default class ApplicationShow extends Component {
     constructor(props) {
@@ -11,57 +12,98 @@ export default class ApplicationShow extends Component {
 
         this.state = {
             application: {
-                name: '',
-                containers: []
+                name: ''
             },
-            loading: true
+            deploymentTemplate: {
+                metadata: {
+                    name: ''
+                },
+                spec: {
+                    replicas: '',
+                    template: {
+                        metadata: {
+                            labels: {}
+                        },
+                        spec: {
+                            containers: []
+                        }
+                    }
+                }
+            },
+            loading: true,
+            namespace: null
         };
     }
 
     componentDidMount = () => {
+        TemplateService.fetchDeploymentTemplate(this.props.application).then(content => {
+            this.setState({ deploymentTemplate: content, loading: false });
+        });
+    };
 
-        var path = this.props.application + '/deployment.yml';
-
-        Github.fetchContents(path).then(response => {
-            var content = yaml.load(atob(response.content));
-
-            var containers = content.spec.template.spec.containers.map(container => {
-                return {
-                    deployment: content.metadata.name,
-                    image: container.image,
-                    name: container.name
-                };
-            });
-
-            this.setState({
-                application: {
-                    name: content.metadata.name,
-                    containers: containers
-                },
-                loading: false
-            });
+    onNamespaceChange = (event, data) => {
+        this.setState({
+            namespace: data.value
         });
     };
 
     render() {
-        var containers = this.state.application.containers.map(container => {
+        const containers = this.state.deploymentTemplate.spec.template.spec.containers.map(container => {
             return (
-                <ContainerItem container={ container } key={ container.name } />
+              <ContainerItem container={ container } key={ container.name }/>
+            );
+        });
+
+        const labels = Object.keys(this.state.deploymentTemplate.spec.template.metadata.labels).map(label => {
+            return (
+              <Label key={ label } image color="grey">
+                  <Icon name="tag"/>{ label }
+                  <Label.Detail>{ this.state.deploymentTemplate.spec.template.metadata.labels[ label ] }</Label.Detail>
+              </Label>
             );
         });
 
         return (
             <Loadable loading={ this.state.loading }>
-                <h1>{ this.state.application.name }</h1>
+                <Grid verticalAlign="middle">
+                    <Grid.Row>
+                        <Grid.Column width={ 8 }>
+                            <Header as="h1">{ this.state.deploymentTemplate.metadata.name }</Header>
+                        </Grid.Column>
 
-                <h3>Containers</h3>
+                        <Grid.Column width={ 6 }>
+                            <NamespaceChooser onChange={ this.onNamespaceChange } />
+                        </Grid.Column>
+
+                        <Grid.Column width={ 2 }>
+                            <ApplicationDeployModal application={ this.props.application } namespace={ this.state.namespace } />
+                        </Grid.Column>
+                    </Grid.Row>
+
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Label image color="blue">
+                                <Icon name="grid layout" />
+                                Replicas
+                                <Label.Detail>{ this.state.deploymentTemplate.spec.replicas }</Label.Detail>
+                            </Label>
+
+                            { labels }
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+
+                <Header as="h2">
+                    Containers
+                    <Header.Subheader>The containers that make up this deployment <Icon circular link name='help' size="tiny" /></Header.Subheader>
+                </Header>
 
                 <Grid>
                     <Grid.Row>
                         <Grid.Column width={ 16 }>
-                            <List divided>
+                            <Item.Group divided>
                                 { containers }
-                            </List>
+                            </Item.Group>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
