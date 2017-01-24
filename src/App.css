@@ -1,3 +1,14 @@
+.app {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.app .content {
+    flex: 1;
+    margin-bottom: 45px;
+}
+
 .sub.header a {
     color: inherit;
 }

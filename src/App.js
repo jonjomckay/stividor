@@ -8,7 +8,7 @@ import './App.css';
 class App extends Component {
     render() {
         return (
-            <div>
+            <div className="app">
                 <Menu borderless>
                     <Container>
                     <Menu.Item header>Stividor</Menu.Item>
@@ -18,12 +18,18 @@ class App extends Component {
                     </Container>
                 </Menu>
 
-                <Container>
+                <Container className="content">
                     <Router.Locations>
                         <Router.Location path="/" handler={ ApplicationList } />
                         <Router.Location path="/:application" handler={ ApplicationShow } />
                     </Router.Locations>
                 </Container>
+
+                <div className="ui inverted vertical footer segment">
+                    <Container textAlign="center">
+                        <img src="/assets/img/logo.svg" className="ui centered mini image" />
+                    </Container>
+                </div>
             </div>
         );
     }
