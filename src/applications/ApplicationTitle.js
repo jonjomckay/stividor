@@ -28,8 +28,10 @@ class ApplicationTitle extends Component {
 
     render() {
         const application = this.props.application;
+        const templateRepoUsername = process.env.REACT_APP_GITHUB_TEMPLATE_REPO_USERNAME;
+        const templateRepoName = process.env.REACT_APP_GITHUB_TEMPLATE_REPO_NAME;
 
-        const githubLink = "https://github.com/" + process.env.REACT_APP_GITHUB_TEMPLATE_REPO_USERNAME + "/" + process.env.REACT_APP_GITHUB_TEMPLATE_REPO_NAME + "/blob/master/" + application;
+        const githubLink = "https://github.com/" + templateRepoUsername + "/" + templateRepoName + "/blob/master/" + application;
 
         return (
             <Grid verticalAlign="middle">
@@ -37,10 +39,10 @@ class ApplicationTitle extends Component {
                     <Grid.Column width={ 6 }>
                         <Header as="h3">
                             { application }
+
                             <Header.Subheader>
                                 <a href={ githubLink }>
-                                    <Icon name='github' size="small" />
-                                    { process.env.REACT_APP_GITHUB_TEMPLATE_REPO_NAME }/{ application }
+                                    <Icon name='github' size="small" /> { templateRepoName }/{ application }
                                 </a>
                             </Header.Subheader>
                         </Header>
