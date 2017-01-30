@@ -3,9 +3,24 @@ import Router, { Link } from 'react-router-component';
 import { Container, Menu } from 'semantic-ui-react';
 import ApplicationList from "./applications/ApplicationList";
 import ApplicationShow from "./applications/ApplicationShow";
+import Notifications from './Notifications';
 import './App.css';
 
 class App extends Component {
+    static childContextTypes = {
+        addNotification: React.PropTypes.func,
+    };
+
+    getChildContext() {
+        return {
+            addNotification: this.addNotification.bind(this),
+        };
+    }
+
+    addNotification(notification) {
+        this.notifications.addNotification(notification);
+    }
+
     render() {
         return (
             <div className="app">
@@ -19,6 +34,8 @@ class App extends Component {
                 </Menu>
 
                 <Container className="content">
+                    <Notifications ref={ ref => this.notifications = ref } />
+
                     <Router.Locations>
                         <Router.Location path="/" handler={ ApplicationList } />
                         <Router.Location path="/:application" handler={ ApplicationShow } />
