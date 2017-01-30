@@ -1,5 +1,5 @@
-import Github from '../Github';
-import ContentHelper from "../ContentHelper";
+import Github from '../clients/Github';
+import ContentHelper from "../helpers/ContentHelper";
 
 export default class TemplateService {
     static fetchDeploymentTemplate(deployment) {

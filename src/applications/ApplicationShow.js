@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Header, Icon, Item, Label } from 'semantic-ui-react';
 import ContainerItem from './ContainerItem';
-import Loadable from '../Loadable';
+import Loadable from '../common/Loadable';
 import TemplateService from "../deployments/TemplateService";
 import ApplicationTitle from './ApplicationTitle';
 

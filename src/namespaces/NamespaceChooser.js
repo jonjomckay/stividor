@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Select } from "semantic-ui-react";
-import Kubernetes from "./Kubernetes";
+import Kubernetes from "../clients/Kubernetes";
 
 class NamespaceChooser extends Component {
     constructor(props) {

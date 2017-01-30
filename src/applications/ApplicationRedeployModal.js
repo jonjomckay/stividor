@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Header, Icon, Modal, Popup, Table } from 'semantic-ui-react';
-import Kubernetes from '../Kubernetes';
-import Loadable from '../Loadable';
+import Kubernetes from '../clients/Kubernetes';
+import Loadable from '../common/Loadable';
 
 export default class ApplicationRedeployModal extends Component {
     constructor(props) {

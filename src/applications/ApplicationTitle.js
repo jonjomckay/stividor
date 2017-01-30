@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Grid, Header, Icon } from 'semantic-ui-react';
 import ApplicationDeployModal from './ApplicationDeployModal';
 import ApplicationRedeployModal from './ApplicationRedeployModal';
-import NamespaceChooser from '../NamespaceChooser';
+import NamespaceChooser from '../namespaces/NamespaceChooser';
 
 class ApplicationTitle extends Component {
     constructor(props) {

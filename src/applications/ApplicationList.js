@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-component';
-import Loadable from '../Loadable';
-import Github from "../Github";
+import Loadable from '../common/Loadable';
+import Github from "../clients/Github";
 import ApplicationTitle from './ApplicationTitle';
-import Kubernetes from "../Kubernetes";
+import Kubernetes from "../clients/Kubernetes";
 
 export default class ApplicationList extends Component {
     constructor(props) {

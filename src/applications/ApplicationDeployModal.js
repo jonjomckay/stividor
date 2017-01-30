@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Form, Header, Icon, Input, Modal, Popup, Table } from 'semantic-ui-react';
 import deepMerge from 'deepmerge';
-import Kubernetes from '../Kubernetes';
-import Loadable from '../Loadable';
+import Kubernetes from '../clients/Kubernetes';
+import Loadable from '../common/Loadable';
 import DeploymentService from "../deployments/DeploymentService";
 import TemplateService from "../deployments/TemplateService";
 
