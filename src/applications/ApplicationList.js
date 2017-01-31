@@ -22,6 +22,13 @@ export default class ApplicationList extends Component {
     }
 
     componentDidMount = () => {
+        this.refreshData();
+    };
+
+    refreshData = () => {
+        this.setState({ loading: true });
+
+        this.context.addNotification('Fetching templates from GitHub');
 
         // Load the git ref for the master branch, so we can get the repository tree
         Github.fetchTemplateRepositoryGitReference('master').then(reference => {
@@ -45,7 +52,14 @@ export default class ApplicationList extends Component {
 
         });
 
+        this.context.addNotification('Fetching namespaces from Kubernetes');
+
         Kubernetes.fetchNamespaces((err, response) => {
+            if (err) {
+                this.context.addNotification('Unable to fetch namespaces from Kubernetes: ' + err, 8000);
+                return;
+            }
+
             this.setState({
                 namespaces: response.items.map(item => item.metadata.name)
             })

@@ -11,12 +11,12 @@ export default class Notifications extends Component {
         };
     }
 
-    addNotification(message) {
+    addNotification(message, timeout = 4000) {
         const key = Date.now();
 
         return this.setState((prevState) => ({
             notifications: prevState.notifications.add({
-                dismissAfter: false,
+                dismissAfter: timeout,
                 message: message,
                 key: key,
                 action: 'Dismiss',
