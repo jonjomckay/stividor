@@ -1,56 +1,52 @@
 import React, { Component } from 'react';
 import { NotificationStack } from 'react-notification';
-import update from 'immutability-helper';
+import { OrderedSet } from 'immutable';
 
 export default class Notifications extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            notifications: []
+            notifications: new OrderedSet()
         };
     }
 
     addNotification(message) {
         const key = Date.now();
 
-        return this.setState({
-            notifications: update(this.state.notifications, {
-                $push: [{
-                    message: message,
-                    key: key,
-                    action: 'Dismiss',
-                    onClick: (deactivate) => {
-                        this.removeNotification(deactivate, key);
-                    }
-                }]
+        return this.setState((prevState) => ({
+            notifications: prevState.notifications.add({
+                dismissAfter: false,
+                message: message,
+                key: key,
+                action: 'Dismiss',
+                onClick: (deactivate) => {
+                    this.deleteNotification(deactivate);
+                }
             })
-        });
+        }));
     }
 
     deleteNotification = (notification) => {
-        this.setState({
-            notifications: update(this.state.notifications, {
-                $unshift: [
-                    notification
-                ]
-            })
-        });
+        this.setState((prevState) => ({
+            notifications: prevState.notifications.delete(notification)
+        }));
     };
 
-    removeNotification(deactivate, count) {
-        deactivate();
-
-        this.setState({
-            notifications: this.state.notifications.filter(n => n.key !== count)
-        })
-    }
+    barStyleFactory = (index, style) => {
+        return Object.assign(
+            {},
+            style,
+            { top: `${2 + index * 4}rem`, bottom: null, left: null, right: '1rem', zIndex: 1000, maxWidth: '45rem' }
+        );
+    };
 
     render() {
         return (
             <NotificationStack
-                notifications={ this.state.notifications }
+                notifications={ this.state.notifications.toArray() }
                 onDismiss={ this.deleteNotification }
+                activeBarStyleFactory={ this.barStyleFactory }
             />
         );
     }

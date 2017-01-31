@@ -6,6 +6,10 @@ import ApplicationTitle from './ApplicationTitle';
 import Kubernetes from "../clients/Kubernetes";
 
 export default class ApplicationList extends Component {
+    static contextTypes = {
+        addNotification: React.PropTypes.func,
+    };
+
     constructor(props) {
         super(props);
 
