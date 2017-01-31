@@ -97,7 +97,7 @@ export default class ApplicationRedeployModal extends Component {
             positiveButtonDisabled = false;
         }
 
-        const button = <Button content="Redeploy" color="yellow" icon="refresh" labelPosition="left" disabled={ positiveButtonDisabled } onClick={ this.onToggle } />;
+        const button = <Button floated="right" fluid content="Redeploy" color="yellow" icon="refresh" labelPosition="left" disabled={ positiveButtonDisabled } onClick={ this.onToggle } />;
 
         const trigger = (
             <Popup trigger={ button }>

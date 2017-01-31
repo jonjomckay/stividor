@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Header, Icon } from 'semantic-ui-react';
+import { Grid, Header, Icon, Segment } from 'semantic-ui-react';
 import ApplicationDeployModal from './ApplicationDeployModal';
 import ApplicationRedeployModal from './ApplicationRedeployModal';
 import NamespaceChooser from '../namespaces/NamespaceChooser';
@@ -36,7 +36,7 @@ class ApplicationTitle extends Component {
         return (
             <Grid verticalAlign="middle">
                 <Grid.Row>
-                    <Grid.Column width={ 6 }>
+                    <Grid.Column width={ 5 }>
                         <Header as="h3">
                             { application }
 
@@ -52,12 +52,11 @@ class ApplicationTitle extends Component {
                         <NamespaceChooser namespaces={ this.state.namespaces } onChange={ this.onNamespaceChange } />
                     </Grid.Column>
 
-                    <Grid.Column width={ 2 }>
-                        <ApplicationDeployModal application={ application } namespace={ this.state.namespace } />
-                    </Grid.Column>
-
-                    <Grid.Column width={ 2 }>
-                        <ApplicationRedeployModal application={ application } namespace={ this.state.namespace } />
+                    <Grid.Column width={ 5 }>
+                        <Segment.Group horizontal className="basic">
+                            <ApplicationDeployModal application={ application } namespace={ this.state.namespace } />
+                            <ApplicationRedeployModal application={ application } namespace={ this.state.namespace } />
+                        </Segment.Group>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>

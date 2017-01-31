@@ -135,7 +135,7 @@ export default class ApplicationDeployModal extends Component {
             positiveButtonDisabled = false;
         }
 
-        const button = <Button content="Deploy" color="green" icon="upload" labelPosition="left" disabled={ positiveButtonDisabled } onClick={ this.onToggle } />;
+        const button = <Button floated="left" fluid content="Deploy" color="green" icon="upload" labelPosition="left" disabled={ positiveButtonDisabled } onClick={ this.onToggle } />;
 
         const trigger = (
             <Popup trigger={ button }>

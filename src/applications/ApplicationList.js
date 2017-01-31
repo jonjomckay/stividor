@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-component';
+import { Button, Header, Segment } from 'semantic-ui-react';
 import Loadable from '../common/Loadable';
 import Github from "../clients/Github";
 import ApplicationTitle from './ApplicationTitle';
@@ -62,11 +63,12 @@ export default class ApplicationList extends Component {
 
         return (
             <Loadable loading={ this.state.loading }>
-                <h1>Applications</h1>
+                <Segment basic clearing className="no-side-padding">
+                    <Button floated="right" content="Refresh" color="blue" icon="refresh" labelPosition="left" onClick={ this.refreshData } />
+                    <Header as="h1" floated="left">Applications</Header>
+                </Segment>
 
-                <div>
-                    { applications }
-                </div>
+                { applications }
             </Loadable>
         );
     }

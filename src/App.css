@@ -17,3 +17,13 @@
     margin-right: 0.25rem;
     vertical-align: middle;
 }
+
+.ui.segment.no-side-padding {
+    padding: 1em 0;
+}
+
+.ui.horizontal.segments.basic {
+    border: none;
+    box-shadow: none;
+    margin: 0;
+}
