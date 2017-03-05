@@ -4,6 +4,7 @@ import ContainerItem from './ContainerItem';
 import Loadable from '../common/Loadable';
 import TemplateService from "../deployments/TemplateService";
 import ApplicationTitle from './ApplicationTitle';
+import ConfigurationService from '../deployments/ConfigurationService';
 
 export default class ApplicationShow extends Component {
     constructor(props) {
@@ -12,6 +13,9 @@ export default class ApplicationShow extends Component {
         this.state = {
             application: {
                 name: ''
+            },
+            configMap: {
+                data: {}
             },
             deploymentTemplate: {
                 metadata: {
@@ -40,16 +44,22 @@ export default class ApplicationShow extends Component {
         });
     };
 
-    onNamespaceChange = (event, data) => {
+    onNamespaceChange = (namespace) => {
+        ConfigurationService.fetchConfigMap(this.props.application, namespace).then(content => {
+            this.setState({
+                configMap: content
+            });
+        });
+
         this.setState({
-            namespace: data.value
+            namespace: namespace
         });
     };
 
     render() {
         const containers = this.state.deploymentTemplate.spec.template.spec.containers.map(container => {
             return (
-              <ContainerItem container={ container } key={ container.name }/>
+              <ContainerItem container={ container } key={ container.name } configMap={ this.state.configMap } />
             );
         });
 
