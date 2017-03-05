@@ -21,9 +21,14 @@ class ApplicationTitle extends Component {
     };
 
     onNamespaceChange = (event, data) => {
+        const namespace = data.value;
+
         this.setState({
-            namespace: data.value
+            namespace: namespace
         });
+
+        // Execute the onNamespaceChange function that might be passed in
+        this.props.onNamespaceChange(namespace);
     };
 
     render() {
@@ -66,7 +71,12 @@ class ApplicationTitle extends Component {
 
 ApplicationTitle.propTypes = {
     application: React.PropTypes.string.isRequired,
-    namespaces: React.PropTypes.arrayOf(React.PropTypes.string)
+    namespaces: React.PropTypes.arrayOf(React.PropTypes.string),
+    onNamespaceChange: React.PropTypes.func
+};
+
+ApplicationTitle.defaultProps = {
+    onNamespaceChange: () => {}
 };
 
 export default ApplicationTitle;

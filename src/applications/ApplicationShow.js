@@ -64,7 +64,7 @@ export default class ApplicationShow extends Component {
 
         return (
             <Loadable loading={ this.state.loading }>
-                <ApplicationTitle application={ this.state.deploymentTemplate.metadata.name } />
+                <ApplicationTitle application={ this.state.deploymentTemplate.metadata.name } onNamespaceChange={ this.onNamespaceChange } />
 
                 <Grid>
                     <Grid.Row>

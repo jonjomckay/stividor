@@ -166,9 +166,14 @@ export default class ApplicationDeployModal extends Component {
 
         const templateContainers = this.state.templateContainers.map(container => {
             return (
-                <Form.Field inline key={ container.name }>
-                    <Input label={ container.name } defaultValue={ container.image } name={ container.name } fluid />
-                </Form.Field>
+                <Table.Row key={ container.image }>
+                    <Table.Cell>{ container.name }</Table.Cell>
+                    <Table.Cell>
+                        <Form.Field inline key={ container.name }>
+                            <Input defaultValue={ container.image } name={ container.name } fluid />
+                        </Form.Field>
+                    </Table.Cell>
+                </Table.Row>
             );
         });
 
@@ -209,7 +214,18 @@ export default class ApplicationDeployModal extends Component {
                         <p>Choose the new container images to deploy:</p>
 
                         <Form id={ formName } onSubmit={ this.onSubmit } width="equal">
-                            { templateContainers }
+                            <Table columns={ 2 } fixed>
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.HeaderCell>Namespace</Table.HeaderCell>
+                                        <Table.HeaderCell>Image</Table.HeaderCell>
+                                    </Table.Row>
+                                </Table.Header>
+
+                                <Table.Body>
+                                    { templateContainers }
+                                </Table.Body>
+                            </Table>
                         </Form>
                     </Loadable>
                 </Modal.Content>
