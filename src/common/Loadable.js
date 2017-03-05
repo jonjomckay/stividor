@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Dimmer, Loader } from 'semantic-ui-react';
 
-export default class Loadable extends Component {
+class Loadable extends Component {
     constructor(props) {
         super(props);
 
@@ -28,3 +28,9 @@ export default class Loadable extends Component {
         );
     }
 }
+
+Loadable.propTypes = {
+    loading: React.PropTypes.bool.isRequired
+};
+
+export default Loadable;
