@@ -8,39 +8,38 @@ import { Button, Grid, Header, Step } from 'semantic-ui-react';
 export default class MultiStep extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             showPreviousBtn: false,
             showNextBtn: true,
             compState: 0,
             navState: this.getNavStates(0, this.props.steps.length)
         };
+
         this.hidden = {
             display: 'none'
         };
-        this.handleOnClick = this.handleOnClick.bind(this);
-        this.handleKeyDown = this.handleKeyDown.bind(this);
-        this.next = this.next.bind(this);
-        this.previous = this.previous.bind(this);
     }
 
-    getNavStates(indx, length) {
+    getNavStates(index, length) {
         let props = {};
+
         for (let i = 0; i < length; i++) {
-            if (i < indx) {
+            if (i < index) {
                 props['active'] = false;
                 props['completed'] = true;
             }
-            else if (i === indx) {
+            else if (i === index) {
                 props['active'] = true;
                 props['completed'] = false;
             }
             else {
                 props['active'] = false;
                 props['completed'] = false;
-                // styles.push('todo')
             }
         }
-        return { current: indx, props: props }
+
+        return { current: index, props: props }
     }
 
     checkNavState(currentStep) {
@@ -72,31 +71,21 @@ export default class MultiStep extends Component {
         this.checkNavState(next);
     }
 
-    handleKeyDown(evt) {
-        if (evt.which === 13) {
-            this.next()
+    handleKeyDown = (e) => {
+        if (e.which === 13) {
+            this.next();
         }
-    }
+    };
 
-    handleOnClick(evt) {
-        if (evt.currentTarget.value === (this.props.steps.length - 1) &&
-            this.state.compState === (this.props.steps.length - 1)) {
-            this.setNavState(this.props.steps.length)
-        }
-        else {
-            this.setNavState(evt.currentTarget.value)
-        }
-    }
-
-    next() {
+    next = () => {
         this.setNavState(this.state.compState + 1)
-    }
+    };
 
-    previous() {
+    previous = () => {
         if (this.state.compState > 0) {
-            this.setNavState(this.state.compState - 1)
+            this.setNavState(this.state.compState - 1);
         }
-    }
+    };
 
     renderSteps() {
         return this.props.steps.map((s, i) => {
@@ -117,6 +106,30 @@ export default class MultiStep extends Component {
     render() {
         const navigationStyle = this.props.showNavigation ? {} : this.hidden;
 
+        let rightButton;
+
+        // If we're on the last step, then change the button to the "Finish" one
+        if (this.state.showNextBtn) {
+            rightButton = (
+                <Button
+                    icon="right arrow"
+                    color="green"
+                    content="Next"
+                    labelPosition="right"
+                    disabled={ !this.state.showNextBtn }
+                    onClick={this.next} />
+            )
+        } else {
+            rightButton = (
+                <Button
+                    icon="right arrow"
+                    color="green"
+                    content="Finish"
+                    labelPosition="right"
+                    onClick={ this.props.onFinish } />
+            )
+        }
+
         return (
             <Grid container onKeyDown={this.handleKeyDown}>
                 <Grid.Row>
@@ -128,23 +141,18 @@ export default class MultiStep extends Component {
                 </Grid.Row>
 
                 <Grid.Row>
-                    <Grid.Column width={ 10 }>
+                    <Grid.Column width={ 9 }>
                         <Header as="h1" content={ this.props.steps[this.state.compState].title } />
                     </Grid.Column>
-                    <Grid.Column width={ 4 } floated="right" style={ navigationStyle }>
+                    <Grid.Column width={ 5 } floated="right" style={ navigationStyle } textAlign="right">
                         <Button
                                 icon="left arrow"
                                 content="Previous"
                                 labelPosition="left"
                                 disabled={ !this.state.showPreviousBtn }
                                 onClick={this.previous} />
-                        <Button
-                                icon="right arrow"
-                                color="green"
-                                content="Next"
-                                labelPosition="right"
-                                disabled={ !this.state.showNextBtn }
-                                onClick={this.next} />
+
+                        { rightButton }
                     </Grid.Column>
                 </Grid.Row>
 
@@ -160,4 +168,8 @@ export default class MultiStep extends Component {
 
 MultiStep.defaultProps = {
     showNavigation: true
+};
+
+MultiStep.propTypes = {
+    onFinish: React.PropTypes.func.isRequired
 };

@@ -3,6 +3,7 @@ import Router, { Link } from 'react-router-component';
 import { Container, Menu } from 'semantic-ui-react';
 import ApplicationList from "./applications/ApplicationList";
 import ApplicationShow from "./applications/ApplicationShow";
+import DeploymentWizard from './deployments/DeploymentWizard';
 import Notifications from './Notifications';
 import './App.css';
 
@@ -28,7 +29,10 @@ class App extends Component {
                     <Container>
                     <Menu.Item header>Stividor</Menu.Item>
                     <Menu.Item>
-                        <Link href="/" className="nav-link">Applications</Link>
+                        <Link href="/" className="nav-link">h</Link>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <Link href="/h" className="nav-link">Applications</Link>
                     </Menu.Item>
                     </Container>
                 </Menu>
@@ -37,7 +41,8 @@ class App extends Component {
                     <Notifications ref={ ref => this.notifications = ref } />
 
                     <Router.Locations>
-                        <Router.Location path="/" handler={ ApplicationList } />
+                        <Router.Location path="/" handler={ DeploymentWizard } />
+                        <Router.Location path="/h" handler={ ApplicationList } />
                         <Router.Location path="/:application" handler={ ApplicationShow } />
                     </Router.Locations>
                 </Container>

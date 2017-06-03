@@ -1,105 +1,10 @@
 import React, { Component } from 'react';
-import { Card, Grid, Header, Icon } from 'semantic-ui-react';
+
 import Multistep from '../common/Multistep';
-import NamespaceChooser from '../namespaces/NamespaceChooser';
-
-class Step1 extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            namespaces: []
-        };
-    }
-
-    render() {
-        return (
-            <div>
-                <Grid columns={ 2 }>
-                    <Grid.Column width={ 6 }>
-                        <p>Choose the namespace that you want to deploy an application to</p>
-
-                        <NamespaceChooser onChange={ this.props.onChooseNamespace } selectedValue={ this.props.selectedNamespace } />
-                    </Grid.Column>
-                    <Grid.Column stretched width={ 8 } floated="right">
-                        <Card fluid>
-                            <Card.Content>
-                                <Card.Header>Namespaces</Card.Header>
-                                <Card.Meta>
-                                    <span className='date'>
-                                      {/*Joined in 2015*/}
-                                    </span>
-                                </Card.Meta>
-                                <Card.Description>
-                                    <p>A namespace needs to be chosen to deploy your application to.</p>
-
-                                    <p>It's a completely separated "virtual cluster" that allows applications to be run
-                                        in separate environments.</p>
-
-                                    <p>Read the <a href="https://kubernetes.io/docs/user-guide/namespaces/" target="_blank">official
-                                        documentation</a> for more information</p>
-                                </Card.Description>
-                            </Card.Content>
-                        </Card>
-                    </Grid.Column>
-                </Grid>
-            </div>
-        );
-    }
-}
-
-Step1.propTypes = {
-    onChooseNamespace: React.PropTypes.func.isRequired,
-    selectedNamespace: React.PropTypes.string
-};
-
-class Step2 extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {};
-    }
-
-    render() {
-        return (
-            <div>
-                sup
-            </div>
-        );
-    }
-}
-
-class Step3 extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {};
-    }
-
-    render() {
-        return (
-            <div>
-                three
-            </div>
-        );
-    }
-}
-
-class Step4 extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {};
-    }
-
-    render() {
-        return (
-            <div>
-                four
-            </div>
-        );
-    }
-}
+import Step1 from './wizard/Step1';
+import Step2 from './wizard/Step2';
+import Step3 from './wizard/Step3';
+import Step4 from './wizard/Step4';
 
 export default class DeploymentWizard extends Component {
     constructor(props) {
@@ -107,14 +12,31 @@ export default class DeploymentWizard extends Component {
 
         this.state = {
             application: '',
+            containers: [],
             namespace: ''
         };
     }
+
+    onChangeContainers = (containers) => {
+        this.setState({
+            containers: containers
+        });
+    };
+
+    onChooseApplication = (e, { name }) => {
+        this.setState({
+            application: name
+        });
+    };
 
     onChooseNamespace = (e, { value }) => {
         this.setState({
             namespace: value
         });
+    };
+
+    onFinish = () => {
+        console.log(this.state);
     };
 
     render() {
@@ -129,25 +51,25 @@ export default class DeploymentWizard extends Component {
                 name: 'Step 2',
                 description: 'Choose an application',
                 title: 'Choose an Application',
-                component: <Step2 />
+                component: <Step2 onChooseApplication={ this.onChooseApplication } selectedApplication={ this.state.application } />
             },
             {
                 name: 'Step 3',
                 description: 'Choose container versions',
                 title: 'Choose Container Versions',
-                component: <Step3 />
+                component: <Step3 application={ this.state.application } namespace={ this.state.namespace } onChangeContainers={ this.onChangeContainers } />
             },
             {
                 name: 'Step 4',
                 description: 'Deploy',
                 title: 'Deploy',
-                component: <Step4 />
+                component: <Step4 application={ this.state.application } containers={ this.state.containers } namespace={ this.state.namespace } />
             }
         ];
 
         return (
             <div>
-                <Multistep steps={ steps } />
+                <Multistep onFinish={ this.onFinish } steps={ steps } />
             </div>
         );
     }
