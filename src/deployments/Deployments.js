@@ -46,19 +46,29 @@ export default class Deployments extends Component {
     };
 
     render() {
-        const deployments = this.state.deployments.map(deployment => {
-            return (
-                <tr key={ deployment.metadata.name }>
-                    <td className="w90">
-                        <div className="strong">{ deployment.metadata.name }</div>
-                        <div>2 containers</div>
-                    </td>
-                    <td className="w10">
-                        <button>Update</button>
-                    </td>
+        let deployments;
+
+        if (this.state.deployments && this.state.deployments.length > 0) {
+            deployments = this.state.deployments.map(deployment => {
+                return (
+                    <tr key={ deployment.metadata.name }>
+                        <td className="w90">
+                            <div className="strong">{ deployment.metadata.name }</div>
+                            <div>2 containers</div>
+                        </td>
+                        <td className="w10">
+                            <button>Update</button>
+                        </td>
+                    </tr>
+                )
+            });
+        } else {
+            deployments = (
+                <tr>
+                    <td>No deployments in this namespace</td>
                 </tr>
-            )
-        });
+            );
+        }
 
         return (
             <div>

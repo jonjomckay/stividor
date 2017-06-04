@@ -54,16 +54,26 @@ export default class DeploymentTable extends Component {
     };
 
     render() {
-        const containers = this.state.containers.map(container => {
-            return (
-                <tr key={ container.name }>
-                    <td className="w50">{ container.name }</td>
-                    <td className="w50">
-                        <input type="text" name={ container.name } onChange={ this.onChangeImage } value={ container.image } />
-                    </td>
+        let containers;
+
+        if (this.state.containers && this.state.containers.length > 0) {
+            containers = this.state.containers.map(container => {
+                return (
+                    <tr key={ container.name }>
+                        <td className="w50">{ container.name }</td>
+                        <td className="w50">
+                            <input type="text" name={ container.name } onChange={ this.onChangeImage } value={ container.image } />
+                        </td>
+                    </tr>
+                )
+            });
+        } else {
+            containers = (
+                <tr>
+                    <td>No containers</td>
                 </tr>
-            )
-        });
+            );
+        }
 
         return (
             <table>
