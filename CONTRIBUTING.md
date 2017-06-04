@@ -24,10 +24,10 @@ This will allow you to branch off and write your change against a separate codeb
 
 ### Step 3: Add an Upstream Remote
 
-The upstream remote is the original project under the ManyWho GitHub organization. To add the upstream remote:
+The upstream remote is the original project. To add the upstream remote:
 
 ```bash
-$ git remote add upstream git@github.com:manywho/service-example.git # Replace the repository with the correct URL
+$ git remote add upstream git@github.com:jonjomckay/stividor.git
 ```
 
 ### Step 4: Create a Feature Branch
@@ -50,15 +50,15 @@ minimise merge issues:
 
 ```bash
 $ git fetch upstream
-$ git rebase upstream/develop
+$ git rebase upstream/master
 ```
 
 ### Step 7: Run Tests
 
-Make sure that your code (and any merged changes) still pass all unit tests:
+Make sure that your code (and any merged changes) still pass any unit tests:
 
 ```bash
-$ mvn test
+$ yarn test
 ```
 
 ### Step 8: Create the Pull Request

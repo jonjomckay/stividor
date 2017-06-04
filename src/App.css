@@ -1,24 +1,138 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700');
+
+body {
+  font-family: Lato, Arial, sans-serif;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: Lato, Arial, sans-serif;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.content {
+  border-top: 4px solid #111;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.App-intro {
-  font-size: large;
+.wrapper {
+  margin: auto 30px;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+#main {
+  flex: 1;
+}
+
+#main .wrapper {
+  margin-top: 24px;
+  max-width: 1128px;
+}
+
+header.top {
+  display: flex;
+  align-items: center;
+  padding: 0 36px;
+  height: 56px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+header.top nav a {
+  color: rgba(0, 0, 0, 0.8);
+  display: inline-block;
+  text-decoration: none;
+}
+
+header.top nav a.button {
+  color: #fff;
+}
+
+header.top nav a.active {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+header.top nav li {
+  font-size: 16px;
+}
+
+header.top ul {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+header.top .brand {
+  margin-right: 36px;
+}
+
+header.top .brand a {
+  display: block;
+  width: 70px;
+  line-height: 11px;
+  background: none no-repeat;
+  color: #000;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+header.top .main {
+  padding-left: 36px;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+header.top .main li {
+  margin-right: 28px;
+}
+
+header.top .extra {
+  margin-left: auto;
+}
+
+header.top .extra li {
+  margin-left: 28px;
+}
+
+header.top .extra .popaside {
+  background: #f03c69;
+  color: #fff;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+}
+
+h1.title {
+  position: relative;
+  margin-bottom: 50px;
+}
+
+h1.title:after {
+  position: absolute;
+  content: '';
+  width: 40px;
+  height: 3px;
+  top: 90px;
+  left: 0;
+  background: #ff3366;
+}
+
+footer.bottom {
+  border-top: 1px solid #eee;
+  padding: 15px 0 0;
+}
+
+footer.bottom .wrapper, footer.bottom nav ul {
+  display: flex;
+}
+
+footer.bottom nav {
+  margin-left: auto;
+}
+
+footer.bottom a {
+  text-decoration: none;
+}
+
+footer.bottom nav li {
+  margin-left: 20px;
 }
