@@ -2,7 +2,10 @@ Stividor
 ========
 
 Stividor is an opinionated tool for managing deployments in Kubernetes. It links directly with the Kubernetes API, and
-is intended to be used as a basic deployment tool, instead of the official Dashboard. 
+is intended to be used as a basic deployment tool, instead of the official Dashboard.
+
+![Deployments](docs/img/screenshot-deployments.png)
+
 
 ## Contributing
 
